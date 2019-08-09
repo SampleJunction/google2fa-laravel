@@ -10,11 +10,12 @@ class Middleware
     public function handle($request, Closure $next)
     {
         $authenticator = app(Authenticator::class)->boot($request);
-
+        $user = auth()->user();
         if ($authenticator->isAuthenticated()) {
+            $user->two_fact_confirm = 1;
+            $user->save();
             return $next($request);
         }
-
         return $authenticator->makeRequestOneTimePasswordResponse();
     }
 }

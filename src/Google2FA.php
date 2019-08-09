@@ -13,11 +13,13 @@ use PragmaRX\Google2FALaravel\Support\Config;
 use PragmaRX\Google2FALaravel\Support\Constants;
 use PragmaRX\Google2FALaravel\Support\Request;
 use PragmaRX\Google2FALaravel\Support\Session;
+use PragmaRX\Google2FA\Support\Base32;
+use PragmaRX\Google2FA\Google2FA as Google2faSecretKeyGenerate;
 use PragmaRX\Google2FAQRCode\Google2FA as Google2FAService;
 
 class Google2FA extends Google2FAService
 {
-    use Auth, Config, Request, Session;
+    use Auth, Config, Request, Session, Base32;
 
     /**
      * Authenticator constructor.
@@ -54,7 +56,12 @@ class Google2FA extends Google2FAService
      */
     protected function getGoogle2FASecretKey()
     {
-        return $this->getUser()->{$this->config('otp_secret_column')};
+        if($this->request->path()=="2fa"){
+            return $this->getUser()->{$this->config('otp_secret_column')};
+        }
+        $user = auth()->user();
+        $secret_key = session()->get('registration_data');
+        return $secret_key['google2fa_secret'];
     }
 
     /**
@@ -64,11 +71,14 @@ class Google2FA extends Google2FAService
      */
     public function isActivated()
     {
-        $secret = $this->getGoogle2FASecretKey();
-
+        $secret = $this->getGoogle2FASecretKeyLogin();
         return !is_null($secret) && !empty($secret);
     }
 
+    public function getGoogle2FASecretKeyLogin()
+    {
+        return $this->getUser()->{$this->config('otp_secret_column')};
+    }
     /**
      * Store the old OTP timestamp.
      *
