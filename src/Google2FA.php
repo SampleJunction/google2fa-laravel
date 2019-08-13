@@ -33,6 +33,7 @@ class Google2FA extends Google2FAService
         parent::__construct();
     }
 
+
     /**
      * Authenticator boot.
      *
@@ -59,6 +60,7 @@ class Google2FA extends Google2FAService
         if($this->request->path()=="2fa"){
             return $this->getUser()->{$this->config('otp_secret_column')};
         }
+		
         $user = auth()->user();
         $secret_key = session()->get('registration_data');
         return $secret_key['google2fa_secret'];
