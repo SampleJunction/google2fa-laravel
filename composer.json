@@ -3,6 +3,12 @@
     "description": "A One Time Password Authentication package, compatible with Google Authenticator.",
     "keywords": ["authentication", "two factor authentication", "google2fa", "laravel"],
     "license": "BSD-3-Clause",
+	"repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/SampleJunction/google2fa-laravel"
+        }
+    ],
     "authors": [
         {
             "name": "Pankaj Jha",
@@ -13,7 +19,7 @@
     "require": {
         "php": ">=7.0",
         "laravel/framework": ">=5.4.36",
-        "samplejunction/google2fa-qrcode": "^1.0"
+          "samplejunction/google2fa-qrcode": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "~5|~6|~7",
